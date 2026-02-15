@@ -1,0 +1,22 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// The "Project" Table
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?  // The ? means Optional
+  status      String   @default("Planned")
+  start_date  DateTime
+  end_date    DateTime?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}

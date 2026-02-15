@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    /* Base Options */
+    "target": "es2016",
+    "module": "commonjs",              /* Node.js uses CommonJS by default */
+    "moduleResolution": "node",
+    "outDir": "./dist",                /* Where compiled JS goes */
+    "rootDir": "./src",                /* Where your TS code lives */
+    
+    /* Strictness */
+    "strict": true,
+    "esModuleInterop": true,           /* Allows importing CommonJS modules like 'express' easily */
+    "skipLibCheck": true,              /* Skips checking inside node_modules files (speeds up build) */
+    "forceConsistentCasingInFileNames": true,
+
+    /* The Fix for your error: */
+    "verbatimModuleSyntax": false      /* Disables the strict import requirement */
+  }
+}
