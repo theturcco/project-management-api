@@ -7,19 +7,25 @@ const prisma = new PrismaClient();
 // Get all projects
 export const getProjects = async (req: Request, res: Response) => {
     try {
-        const projects = await prisma.project.findMany();
+        const projects = await prisma.project.findMany({
+            include: {
+                client: true
+            }
+        });
         res.json(projects);
     } catch (error) {
+        console.error("Error fetching projects:", error);
         res.status(500).json({ error: "Failed to fetch projects:" });
     }
 };
 
 // Get one project
 export const getProjectById = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params as { id: string };
     try {
         const project = await prisma.project.findUnique({
-            where: { id: Number(id) }
+            where: { id: id },
+            include: { client: true }
         });
         if (!project) {
             return res.status(404).json({ message: "Project not found" });
@@ -33,11 +39,11 @@ export const getProjectById = async (req: Request, res: Response) => {
 // Create a new project
 export const createProject = async (req: Request, res: Response) => {
     try {
-        const { name, description, status, start_date } = req.body;
+        const { name, description, status, start_date, clientId } = req.body;
 
         // Basic validation
-        if (!name || !start_date) {
-            return res.status(400).json({ message: "Name and start_date are required" });
+        if (!name || !start_date || !clientId) {
+            return res.status(400).json({ message: "Name, start_date, and clientId are required" });
         }
 
         const newProject = await prisma.project.create({
@@ -45,22 +51,24 @@ export const createProject = async (req: Request, res: Response) => {
                 name,
                 description,
                 status: status || "Planned",
-                start_date: new Date(start_date)
+                start_date: new Date(start_date),
+                client: { connect: { id: clientId } }
             }
         });
         res.status(201).json(newProject);
     } catch (error) {
+        console.error("Error creating project:", error);
         res.status(500).json({ error: "Failed to create project" });
     }
 };
 
 // Update a project
 export const updateProject = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params as { id: string };
     const { name, description, status, start_date, end_date } = req.body;
     try {
         const updated = await prisma.project.update({
-            where: { id: Number(id) },
+            where: { id: id },
             data: {
                 name,
                 description,
@@ -77,10 +85,10 @@ export const updateProject = async (req: Request, res: Response) => {
 
 // Delete a project
 export const deleteProject = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params as { id: string };
     try {
         await prisma.project.delete({
-            where: { id: Number(id) }
+            where: { id: id }
         });
         res.json({ message: "Project deleted successfully" });
     } catch (error) {

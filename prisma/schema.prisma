@@ -9,14 +9,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// The "Project" Table
+// Client Table
+model Client {
+  id        String    @id @default(uuid()) // UUID instead of Int
+  name      String
+  email     String    @unique
+  industry  String?
+  projects  Project[] // One Client has Many Projects
+  createdAt DateTime  @default(now())
+}
+
+// Project Table
 model Project {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid()) // UUID here too!
   name        String
-  description String?  // The ? means Optional
+  description String?
   status      String   @default("Planned")
   start_date  DateTime
   end_date    DateTime?
+  
+  // Relationship Field (Foreign Key)
+  clientId    String   // The actual field storing the ID
+  client      Client   @relation(fields: [clientId], references: [id])
+  
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 }

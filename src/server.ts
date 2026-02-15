@@ -1,6 +1,7 @@
 // src/server.ts
 import express, { Request, Response } from 'express';
 import projectRoutes from './routes/projectRoutes';
+import clientRoutes from './routes/clientRoutes';
 
 // 1. Create the "App"
 const app = express();
@@ -26,6 +27,8 @@ app.get('/about', (req: Request, res: Response) => {
 // Mount the project Router
 // This means any URL starting with /projects will go to that file
 app.use('/projects', projectRoutes); // Mounting the project routes at /projects
+// This means any URL starting with /clients will go to that file
+app.use('/clients', clientRoutes); // Mounting the client routes at /clients
 
 // 4. Start the Server (Run the App)
 app.listen(PORT, () => {
