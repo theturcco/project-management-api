@@ -1,14 +1,15 @@
 // src/middleware/auth.ts
 import { Request, Response, NextFunction } from 'express';
 
-// Hardcoded token for now (in real life, use environment variables or a secure vault)
-const API_KEY = "my-secred-key-123";
-
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
-    // Check for the API key in the Authorization header
+    // 1. Get the API key from environment variables
+    // If it's not set, default to empty string to fail safely
+    const serverKey = process.env.API_SECRET || "";
+
+    // 2. Get the API key from the request headers
     const apiKey = req.headers['x-api-key'];
 
-    if (apiKey && apiKey === API_KEY) {
+    if (apiKey && apiKey === serverKey) {
         // If the key is valid, proceed to the next step (the actual route handler)
         next();
     } else {
