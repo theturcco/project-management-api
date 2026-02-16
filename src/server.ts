@@ -1,11 +1,17 @@
 // src/server.ts
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 import projectRoutes from './routes/projectRoutes';
 import clientRoutes from './routes/clientRoutes';
 
 // 1. Create the "App"
 const app = express();
 const PORT = 3000;
+
+// Enable CORS
+// This allows "Anyone" to talk to the API (for now).
+// In production, we can restrict this to just your frontend URL
+app.use(cors()); // Enable CORS for all routes
 
 // 2. Middleware
 // This allows the app to understand JSON data sent in requests
