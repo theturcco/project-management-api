@@ -53,6 +53,9 @@ export const createProject = async (req: Request, res: Response) => {
                 status: status || "Planned",
                 start_date: new Date(start_date),
                 client: { connect: { id: clientId } }
+            },
+            include: {
+                client: true
             }
         });
         res.status(201).json(newProject);
@@ -75,6 +78,9 @@ export const updateProject = async (req: Request, res: Response) => {
                 status,
                 start_date: start_date ? new Date(start_date) : undefined,
                 end_date: end_date ? new Date(end_date) : undefined
+            },
+            include: {
+                client: true
             }
         });
         res.json(updated);
